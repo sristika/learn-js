@@ -1,17 +1,33 @@
-window.onload = function() {
+window.onload = function () {
   document.getElementById('addTableBtn').addEventListener('click', addTable);
-}
+};
 
 function createTRNode(colNodes) {
-  let trNode = document.createElement("tr");
-  colNodes.forEach(function(colNode) {
+  let trNode = document.createElement('tr');
+  colNodes.forEach(function (colNode) {
     trNode.appendChild(colNode);
-  })
+  });
   return trNode;
 }
 
+function edit(node) {
+  let currentTxt = node.textContent;
+  let nNode = document.createElement('input');
+  nNode.type = 'text';
+  nNode.value = currentTxt;
+
+  nNode.addEventListener('blur', function () {
+    node.innerHTML = '';
+    node.appendChild(document.createTextNode(nNode.value));
+  });
+
+  node.innerHTML = '';
+  node.appendChild(nNode);
+  nNode.focus();
+}
+
 function createTDNode(childNode) {
-  let tdNode = document.createElement("td");
+  let tdNode = document.createElement('td');
   tdNode.appendChild(childNode);
   return tdNode;
 }
@@ -21,11 +37,24 @@ function createTxtNode(txt) {
   return txtNode;
 }
 
+function createBtnNode(btnTxt, e, l) {
+  let btnNode = document.createElement('button');
+  let BtnTxtNode = document.createTextNode(btnTxt);
+  btnNode.appendChild(BtnTxtNode);
+  btnNode.addEventListener(e, l);
+  return btnNode;
+}
+
 function addTable() {
-  const tableNode = document.createElement("table");
-  for(let i = 0; i < 3; i++) {
-    let col1 = createTDNode(createTxtNode("Cell (" + i + ", 0)"));
-    tableNode.appendChild(createTRNode([col1]));
+  const tableNode = document.createElement('table');
+  for (let i = 0; i < 3; i++) {
+    let col1 = createTDNode(createTxtNode('Cell (' + i + ', 0)'));
+    let col2 = createTDNode(
+      createBtnNode('Edit text ', 'click', function () {
+        edit(col1);
+      })
+    );
+    tableNode.appendChild(createTRNode([col1, col2]));
   }
-  document.getElementById("root").appendChild(tableNode);
+  document.getElementById('root').appendChild(tableNode);
 }
